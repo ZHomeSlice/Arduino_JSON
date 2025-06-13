@@ -21,7 +21,8 @@
 
 #include "JSONVar.h"
 
-JSONVar::JSONVar(struct cJSON *json, struct cJSON *parent) : _json(json), _parent(parent) {
+JSONVar::JSONVar(struct cJSON *json, struct cJSON *parent) : _json(json),
+                                                             _parent(parent) {
 }
 
 JSONVar::JSONVar(bool b) : JSONVar() {
@@ -324,31 +325,10 @@ JSONVar JSONVar::operator[](const JSONVar &key) {
   return JSONVar(NULL, NULL);
 }
 
-int JSONVar::stringLength() const {
-  if (!cJSON_IsString(_json)) {
-    return -1;
-  }
-  return strlen(_json->valuestring);
-}
-
-int JSONVar::arrayLength() const {
-  if (!cJSON_IsArray(_json)) {
-    return -1;
-  }
-  return cJSON_GetArraySize(_json);
-}
-
-int JSONVar::objectLength() const {
-  if (!cJSON_IsObject(_json)) {
-    return -1;
-  }
-  return cJSON_GetArraySize(_json);
-}
-
 int JSONVar::length() const {
   if (cJSON_IsString(_json)) {
-    return strlen(_json->valuestring);
-  } else if (cJSON_IsArray(_json) || cJSON_IsObject(_json)) {
+    return strlen(_json->string);
+  } else if (cJSON_IsArray(_json)) {
     return cJSON_GetArraySize(_json);
   } else {
     return -1;
@@ -356,14 +336,12 @@ int JSONVar::length() const {
 }
 
 JSONVar JSONVar::keys() const {
-  if (cJSON_IsObject(_json) < 1) {
+  if (!cJSON_IsObject(_json)) {
     return JSONVar(NULL, NULL);
   }
 
   int length = cJSON_GetArraySize(_json);
-  if (length == 0) {
-    return JSONVar(cJSON_CreateArray(), NULL);
-  }
+
   const char *keys[length];
   cJSON *child = _json->child;
 
@@ -431,25 +409,6 @@ String JSONVar::typeof_(const JSONVar &value) {
   } else {
     return "unknown";
   }
-}
-
-bool JSONVar::isNull() const {
-  return _json == NULL || cJSON_IsInvalid(_json) || cJSON_IsNull(_json);
-}
-bool JSONVar::isBool() const {
-  return cJSON_IsBool(_json);
-}
-bool JSONVar::isNumber() const {
-  return cJSON_IsNumber(_json);
-}
-bool JSONVar::isString() const {
-  return cJSON_IsString(_json);
-}
-bool JSONVar::isArray() const {
-  return cJSON_IsArray(_json);
-}
-bool JSONVar::isObject() const {
-  return cJSON_IsObject(_json);
 }
 
 void JSONVar::replaceJson(struct cJSON *json) {

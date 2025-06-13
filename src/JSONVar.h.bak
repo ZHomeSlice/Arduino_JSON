@@ -91,9 +91,6 @@ public:
   JSONVar operator[](const JSONVar &key);
 
   int length() const;
-  int objectLength() const;
-  int arrayLength() const;
-  int stringLength() const;
   JSONVar keys() const;
   bool hasOwnProperty(const char *key) const;
   bool hasOwnProperty(const String &key) const;
@@ -112,12 +109,6 @@ public:
   static JSONVar parse(const String &s);
   static String stringify(const JSONVar &value);
   static String typeof_(const JSONVar &value);
-  bool isNull() const;
-  bool isBool() const;
-  bool isNumber() const;
-  bool isString() const;
-  bool isArray() const;
-  bool isObject() const;
 
 private:
   JSONVar(struct cJSON *json, struct cJSON *parent);
