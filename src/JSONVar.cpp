@@ -357,7 +357,7 @@ int JSONVar::length() const {
 
 JSONVar JSONVar::keys() const {
   int length;
-  if ((length = objectLength(_json)) < 1) {
+  if ((length = objectLength()) < 1) {
     return JSONVar(cJSON_CreateArray(), NULL);
   }
   const char *keys[length];
