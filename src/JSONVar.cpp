@@ -356,12 +356,8 @@ int JSONVar::length() const {
 }
 
 JSONVar JSONVar::keys() const {
-  if (cJSON_IsObject(_json) < 1) {
-    return JSONVar(NULL, NULL);
-  }
-
-  int length = cJSON_GetArraySize(_json);
-  if (length == 0) {
+  int length;
+  if ((length = objectLength(_json)) < 1) {
     return JSONVar(cJSON_CreateArray(), NULL);
   }
   const char *keys[length];
